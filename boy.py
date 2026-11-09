@@ -18,6 +18,7 @@ class Boy:
         self.dir = 0
         self.face_dir = 1
         self.pressed_keys = set()
+        self.ball_type = Ball.SMALL
 
         self.machine = Machine(
             model=self,
@@ -47,8 +48,15 @@ class Boy:
         self.frame = 0
 
     def fire_ball(self):
-        ball = Ball(self.x, self.y, self.face_dir * 10)
+        if self.ball_type is None:
+            return
+        ball = Ball(self.x, self.y, self.face_dir * 10, self.ball_type)
         game_world.add_oject(ball)
+
+    def select_ball(self, ball_type):
+        if ball_type not in (None, Ball.SMALL, Ball.LARGE):
+            raise ValueError('Unknown ball selection')
+        self.ball_type = ball_type
 
     def handle_event(self, event):
         if (event.type == SDL_KEYDOWN and
