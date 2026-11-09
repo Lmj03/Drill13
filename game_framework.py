@@ -11,17 +11,21 @@ def change_mode(mode):
 
 
 def push_mode(mode):
-    if stack:
+    if stack and getattr(mode, 'pauses_underlying', True):
         stack[-1].pause()
     stack.append(mode)
     mode.init()
 
 
 def pop_mode():
+    previous_was_paused = False
     if stack:
-        stack.pop().finish()
+        mode = stack.pop()
+        previous_was_paused = getattr(mode, 'pauses_underlying', True)
+        mode.finish()
     if stack:
-        stack[-1].resume()
+        if previous_was_paused:
+            stack[-1].resume()
     else:
         quit()
 
