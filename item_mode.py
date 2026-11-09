@@ -30,6 +30,12 @@ def handle_events():
                 and not getattr(event, 'repeat', 0)):
             play_mode.boy.select_ball(ball_choices[event.key])
             close_requested = True
+        elif (event.type == SDL_KEYDOWN and event.key == SDLK_i
+              and not getattr(event, 'repeat', 0)):
+            close_requested = True
+        else:
+            # Process the whole batch, including releases after a selection.
+            play_mode.boy.handle_event(event)
 
     if close_requested:
         game_framework.pop_mode()
